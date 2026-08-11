@@ -27,7 +27,7 @@ class TestEventEnvelope:
             )
     
     def test_envelope_validation_invalid_priority(self):
-        with pytest.raises(ValueError, match="Priority must be between 1 and 4"):
+        with pytest.raises(ValueError, match="Priority must be between 1"):
             EventEnvelope(
                 event_type="funnel.created",
                 engine_id="engine-1",

@@ -69,11 +69,11 @@ class MetricsEmitter:
             "avg": sum(sorted_values) / count,
             "min": sorted_values[0],
             "max": sorted_values[-1],
-            "p50": sorted_values[int(count * 0.5)],
-            "p95": sorted_values[int(count * 0.95)],
-            "p99": sorted_values[int(count * 0.99)],
+            "p50": sorted_values[max(0, int(count * 0.5) - 1)],
+            "p95": sorted_values[max(0, int(count * 0.95) - 1)],
+            "p99": sorted_values[max(0, int(count * 0.99) - 1)],
         }
-    
+
     def reset(self):
         """Reset all metrics."""
         with self._lock:
@@ -88,7 +88,7 @@ class MetricsEmitter:
                 "counters": dict(self._counters),
                 "gauges": dict(self._gauges),
                 "histograms": {
-                    key: self.get_histogram_stats_from_values(values)
+                    key: self._get_histogram_stats_from_values(values)
                     for key, values in self._histograms.items()
                 }
             }
@@ -114,9 +114,9 @@ class MetricsEmitter:
             "avg": sum(sorted_values) / count,
             "min": sorted_values[0],
             "max": sorted_values[-1],
-            "p50": sorted_values[int(count * 0.5)],
-            "p95": sorted_values[int(count * 0.95)],
-            "p99": sorted_values[int(count * 0.99)],
+            "p50": sorted_values[max(0, int(count * 0.5) - 1)],
+            "p95": sorted_values[max(0, int(count * 0.95) - 1)],
+            "p99": sorted_values[max(0, int(count * 0.99) - 1)],
         }
 
 

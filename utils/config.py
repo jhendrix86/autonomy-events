@@ -14,7 +14,7 @@ class Config(BaseModel):
     # DLQ Configuration
     dlq_enabled: bool = Field(default=True)
     dlq_queue_suffix: str = Field(default=".dlq")
-    max_retries: int = Field(default=3)
+    max_retries: int = Field(default_factory=lambda: int(os.getenv("MAX_RETRIES", "3")))
     
     # Retry Configuration
     retry_enabled: bool = Field(default=True)

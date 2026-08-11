@@ -161,20 +161,23 @@ class TestFailureEvents:
             failure_type="processing",
             severity="high",
             component="orchestrator",
-            error_message="Timeout error"
+            error_message="Timeout error",
+            detected_by="monitoring-engine"
         )
-        
+
         assert event.is_retriable is True
         assert event.requires_manual_intervention is False
-    
+
     def test_failure_retry_scheduled(self):
         event = FailureRetryScheduled(
             failure_id="fail-123",
             retry_attempt=1,
             max_retries=3,
-            retry_strategy="exponential"
+            retry_at="2024-01-01T00:05:00",
+            retry_strategy="exponential",
+            scheduled_by="autonomy-events"
         )
-        
+
         assert event.retry_attempt == 1
 
 
@@ -210,7 +213,7 @@ class TestTemporalEvents:
         event = CausalChainDetected(
             chain_id="chain-123",
             chain_type="success",
-            events=["event-1", "event-2"],
+            events=[{"event_id": "event-1"}, {"event_id": "event-2"}],
             root_event_id="event-1",
             leaf_event_id="event-2",
             chain_length=2,

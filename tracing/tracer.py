@@ -82,7 +82,7 @@ class TraceParent:
         return TraceParent(
             trace_context=child_trace_context,
             correlation_id=self.correlation_id or child_trace_context.trace_id,
-            causation_id=self.causation_id or self.trace_context.span_id,
+            causation_id=self.trace_context.span_id,
             parent_span_id=self.trace_context.span_id,
         )
 

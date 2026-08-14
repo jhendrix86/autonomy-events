@@ -2,10 +2,12 @@ from datetime import datetime
 from typing import Optional, Dict, Any, List
 from pydantic import BaseModel, Field
 
+from severity import Severity
+
 
 class SafetyViolationDetected(BaseModel):
     violation_type: str = Field(..., description="Type of safety violation")
-    severity: str = Field(..., description="Severity level (low, medium, high, critical)")
+    severity: Severity = Field(..., description="Severity level")
     violated_rule: str = Field(..., description="The rule that was violated")
     entity_type: str = Field(..., description="Type of entity that caused violation")
     entity_id: str = Field(..., description="ID of entity that caused violation")

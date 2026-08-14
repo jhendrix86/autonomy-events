@@ -21,6 +21,7 @@ from registry import SchemaRegistry, SchemaVersion, CompatibilityMode
 from tracing import Tracer, TraceContext, TraceParent
 from dlq import DLQManager, DLQMessage
 from utils import EventValidator, ValidationError, MetricsEmitter, Timer, Config
+from severity import Severity, severity_at_least, max_severity
 
 # Event schemas
 from schemas.pydantic import (
@@ -88,6 +89,9 @@ __all__ = [
     "MetricsEmitter",
     "Timer",
     "Config",
+    "Severity",
+    "severity_at_least",
+    "max_severity",
     # Event schemas
     "FunnelCreated",
     "FunnelApproved",

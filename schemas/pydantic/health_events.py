@@ -2,6 +2,8 @@ from datetime import datetime
 from typing import Optional, Dict, Any, List
 from pydantic import BaseModel, Field
 
+from severity import Severity
+
 
 class EngineHealthReport(BaseModel):
     engine_id: str = Field(..., description="Engine identifier")
@@ -23,7 +25,7 @@ class EngineHealthReport(BaseModel):
 class EngineDegraded(BaseModel):
     engine_id: str = Field(..., description="Engine identifier")
     degradation_type: str = Field(..., description="Type of degradation (performance, connectivity, resource)")
-    severity: str = Field(..., description="Severity level (low, medium, high, critical)")
+    severity: Severity = Field(..., description="Severity level")
     detected_at: datetime = Field(default_factory=datetime.utcnow)
     detected_by: str = Field(..., description="Monitoring system that detected degradation")
     affected_services: List[str] = Field(default_factory=list, description="Services affected by degradation")

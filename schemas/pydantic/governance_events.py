@@ -2,6 +2,8 @@ from datetime import datetime
 from typing import Optional, Dict, Any, List
 from pydantic import BaseModel, Field
 
+from severity import Severity
+
 
 class GovernanceRequest(BaseModel):
     request_id: str = Field(..., description="Unique request identifier")
@@ -42,7 +44,7 @@ class GovernanceEmergencyStop(BaseModel):
     triggered_by: str = Field(..., description="Engine or user that triggered stop")
     triggered_at: datetime = Field(default_factory=datetime.utcnow)
     rollback_plan: Dict[str, Any] = Field(default_factory=dict, description="Rollback plan")
-    severity: str = Field(default="critical", description="Severity level")
+    severity: Severity = Field(default=Severity.CRITICAL, description="Severity level")
     affected_entities: List[str] = Field(default_factory=list, description="List of affected entity IDs")
 
 

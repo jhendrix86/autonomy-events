@@ -2,6 +2,8 @@ from datetime import datetime
 from typing import Optional, Dict, Any, List
 from pydantic import BaseModel, Field
 
+from severity import Severity
+
 
 class KGEentityCreated(BaseModel):
     entity_type: str = Field(..., description="Type of entity (user, product, funnel, niche, etc.)")
@@ -54,7 +56,7 @@ class KGInsightGenerated(BaseModel):
 class KGAnomalyDetected(BaseModel):
     anomaly_type: str = Field(..., description="Type of anomaly (performance, behavior, data)")
     entities: List[Dict[str, Any]] = Field(default_factory=list, description="Entities affected by anomaly")
-    severity: str = Field(..., description="Severity level (low, medium, high, critical)")
+    severity: Severity = Field(..., description="Severity level")
     detected_at: datetime = Field(default_factory=datetime.utcnow)
     detected_by: str = Field(..., description="Engine or service that detected the anomaly")
     anomaly_data: Dict[str, Any] = Field(default_factory=dict, description="Anomaly-specific data")

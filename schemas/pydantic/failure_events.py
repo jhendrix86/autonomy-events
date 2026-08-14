@@ -2,11 +2,13 @@ from datetime import datetime
 from typing import Optional, Dict, Any, List
 from pydantic import BaseModel, Field
 
+from severity import Severity
+
 
 class FailureDetected(BaseModel):
     failure_id: str = Field(..., description="Unique failure identifier")
     failure_type: str = Field(..., description="Type of failure (processing, network, validation, system)")
-    severity: str = Field(..., description="Severity level (low, medium, high, critical)")
+    severity: Severity = Field(..., description="Severity level")
     component: str = Field(..., description="Component where failure occurred")
     error_message: str = Field(..., description="Error message")
     error_code: Optional[str] = Field(None, description="Error code if available")

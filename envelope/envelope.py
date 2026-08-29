@@ -46,7 +46,12 @@ class EventEnvelope(BaseModel):
         return v.lower()
 
     def to_dict(self) -> Dict[str, Any]:
-        return self.dict()
+        # mode="json" so datetime -> ISO string, UUID -> str, Enum -> value:
+        # every caller of this immediately json.dumps() the result (publisher,
+        # consumer, dlq_manager), and a bare .dict() keeps datetime objects
+        # that json.dumps can't encode - which broke real (non-mocked)
+        # publishing entirely. from_dict() re-parses the ISO strings fine.
+        return self.model_dump(mode="json")
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "EventEnvelope":

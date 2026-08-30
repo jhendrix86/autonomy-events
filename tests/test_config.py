@@ -1,5 +1,6 @@
 import pytest
 import os
+from pydantic import ValidationError
 from utils import Config
 
 
@@ -41,9 +42,9 @@ class TestConfig:
         assert config.dlq_enabled is False
     
     def test_config_validation(self):
-        config = Config(
-            rabbitmq_url="amqp://localhost:5672",
-            priority=3
-        )
-        
-        assert config.priority == 3
+        # Config is a pydantic model - it coerces/validates field types.
+        config = Config(rabbitmq_url="amqp://localhost:5672", max_retries="7")
+        assert config.max_retries == 7  # str -> int coercion
+
+        with pytest.raises(ValidationError):
+            Config(max_retries="not-a-number")

@@ -1,4 +1,5 @@
 import pytest
+from pydantic import ValidationError as PydanticValidationError
 from envelope import EventEnvelope
 from utils import EventValidator, ValidationError
 
@@ -26,25 +27,20 @@ class TestEventValidator:
         assert any("event_id" in e.message for e in errors)
     
     def test_validate_envelope_invalid_event_type_format(self):
-        envelope = EventEnvelope(
-            event_type="invalid",
-            engine_id="engine-1"
-        )
-        
-        errors = EventValidator.validate_envelope(envelope)
-        assert len(errors) > 0
-        assert any("dot notation" in e.message for e in errors)
-    
+        # event_type dot-notation is now enforced by EventEnvelope's own
+        # pydantic validator at construction time, so a malformed value
+        # never reaches EventValidator.validate_envelope - it's rejected here.
+        with pytest.raises(PydanticValidationError, match="dot notation"):
+            EventEnvelope(event_type="invalid", engine_id="engine-1")
+
     def test_validate_envelope_invalid_priority(self):
-        envelope = EventEnvelope(
-            event_type="funnel.created",
-            engine_id="engine-1",
-            priority=5
-        )
-        
-        errors = EventValidator.validate_envelope(envelope)
-        assert len(errors) > 0
-        assert any("priority" in e.message for e in errors)
+        # Likewise, priority range is enforced at construction.
+        with pytest.raises(PydanticValidationError, match="between 1"):
+            EventEnvelope(
+                event_type="funnel.created",
+                engine_id="engine-1",
+                priority=5,
+            )
     
     def test_validate_payload_valid(self):
         payload = {

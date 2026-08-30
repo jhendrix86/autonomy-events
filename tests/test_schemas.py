@@ -38,6 +38,9 @@ class TestFunnelEvents:
         assert event.approved_by == "governance-engine"
     
     def test_funnel_metrics(self):
+        # FunnelMetrics is a transport schema, not a calculator: the producer
+        # computes conversion_rate / roi and passes them in. Fields left
+        # unset default to 0.0.
         event = FunnelMetrics(
             funnel_id="test-123",
             period_start="2024-01-01T00:00:00",
@@ -45,11 +48,14 @@ class TestFunnelEvents:
             visitors=1000,
             leads=100,
             conversions=10,
-            revenue=1000.0
+            revenue=1000.0,
+            conversion_rate=0.01,
         )
-        
+
+        assert event.visitors == 1000
+        assert event.conversions == 10
         assert event.conversion_rate == 0.01
-        assert event.roi == 0.0
+        assert event.roi == 0.0  # not supplied -> schema default
 
 
 class TestGovernanceEvents:

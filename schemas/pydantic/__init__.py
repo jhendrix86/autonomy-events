@@ -35,6 +35,7 @@ from .failure_events import (
     FailureDetected,
     FailureRecovered,
     FailureRetryScheduled,
+    FailureEscalated,
 )
 from .dlq_events import (
     DLQEventFailed,
@@ -78,6 +79,7 @@ __all__ = [
     "FailureDetected",
     "FailureRecovered",
     "FailureRetryScheduled",
+    "FailureEscalated",
     # DLQ Events
     "DLQEventFailed",
     "DLQEventReplayed",

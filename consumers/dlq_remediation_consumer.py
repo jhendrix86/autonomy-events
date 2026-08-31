@@ -236,7 +236,19 @@ class DLQRemediationConsumer:
                 # call would have raised TypeError on the real publisher
                 # (found 2026-08-10, never previously exercised since
                 # nothing wired self.publisher in the first place).
-                await self.publisher.publish(envelope, routing_key)
+                #
+                # publish() reports failure (e.g. schema validation) via a
+                # PublishResult, not an exception - discarding the return
+                # value here meant a validation failure (found live: no
+                # schema was registered for failure.escalated) silently
+                # vanished with neither a log line nor a raised error.
+                result = await self.publisher.publish(envelope, routing_key)
+                if not result.success:
+                    logger.error(
+                        "retry_scheduled_event_publish_failed",
+                        failure_id=failure_id,
+                        error=result.error
+                    )
             except Exception as e:
                 logger.error(
                     "retry_scheduled_event_publish_failed",
@@ -289,7 +301,13 @@ class DLQRemediationConsumer:
                         "reason": "manual_intervention_required"
                     },
                 )
-                await self.publisher.publish(envelope, routing_key)
+                result = await self.publisher.publish(envelope, routing_key)
+                if not result.success:
+                    logger.error(
+                        "escalation_event_publish_failed",
+                        failure_id=failure_id,
+                        error=result.error
+                    )
             except Exception as e:
                 logger.error(
                     "escalation_event_publish_failed",

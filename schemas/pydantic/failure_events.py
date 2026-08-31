@@ -45,3 +45,11 @@ class FailureRetryScheduled(BaseModel):
     scheduled_by: str = Field(..., description="Engine or service scheduling retry")
     original_payload: Dict[str, Any] = Field(default_factory=dict, description="Original payload to retry")
     retry_context: Dict[str, Any] = Field(default_factory=dict, description="Retry-specific context")
+
+
+class FailureEscalated(BaseModel):
+    failure_id: str = Field(..., description="Original failure identifier")
+    escalated_at: datetime = Field(default_factory=datetime.utcnow)
+    escalated_by: str = Field(..., description="Engine or service escalating the failure")
+    original_failure: Dict[str, Any] = Field(default_factory=dict, description="Original failure.detected payload")
+    reason: str = Field(..., description="Why this was escalated to manual intervention")

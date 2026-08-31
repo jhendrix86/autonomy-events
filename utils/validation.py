@@ -10,7 +10,7 @@ from schemas.pydantic import (
     KGInsightGenerated, KGAnomalyDetected,
     SafetyViolationDetected, SafetyBlockedAction, SafetyRollbackTriggered,
     EngineHealthReport, EngineDegraded, EngineRecovered,
-    FailureDetected, FailureRecovered, FailureRetryScheduled,
+    FailureDetected, FailureRecovered, FailureRetryScheduled, FailureEscalated,
     DLQEventFailed, DLQEventReplayed,
     TemporalSnapshot, CausalChainDetected,
 )
@@ -53,6 +53,7 @@ class EventValidator:
         "failure.detected": FailureDetected,
         "failure.recovered": FailureRecovered,
         "failure.retry_scheduled": FailureRetryScheduled,
+        "failure.escalated": FailureEscalated,
         "dlq.event_failed": DLQEventFailed,
         "dlq.event_replayed": DLQEventReplayed,
         "temporal.snapshot": TemporalSnapshot,
